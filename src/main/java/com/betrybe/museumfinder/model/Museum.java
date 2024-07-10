@@ -15,32 +15,6 @@ public class Museum {
   private Long legacyId;
 
   /**
-   * Instantiates a new Museum.
-   *
-   * @param id             the id
-   * @param name           the name
-   * @param description    the description
-   * @param address        the address
-   * @param collectionType the collection type
-   * @param subject        the subject
-   * @param url            the url
-   * @param coordinate     the coordinate
-   * @param legacyId       the legacy id
-   */
-  public Museum(Long id, String name, String description, String address, String collectionType,
-      String subject, String url, Coordinate coordinate, Long legacyId) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.address = address;
-    this.collectionType = collectionType;
-    this.subject = subject;
-    this.url = url;
-    this.coordinate = coordinate;
-    this.legacyId = legacyId;
-  }
-
-  /**
    * Gets id.
    *
    * @return the id
