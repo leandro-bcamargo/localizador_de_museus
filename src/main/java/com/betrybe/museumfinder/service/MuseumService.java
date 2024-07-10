@@ -32,6 +32,12 @@ public class MuseumService implements MuseumServiceInterface {
     Optional<Museum> closestMuseum = this.museumFakeDatabase.getClosestMuseum(coordinate,
         maxDistance);
 
+    Boolean isCoordinateValid = CoordinateUtil.isCoordinateValid(coordinate);
+
+    if (!isCoordinateValid) {
+      throw new InvalidCoordinateException();
+    }
+
     if (closestMuseum.isEmpty()) {
       throw new MuseumNotFoundException();
     }
