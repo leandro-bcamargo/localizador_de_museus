@@ -1,6 +1,7 @@
 package com.betrybe.museumfinder.solution;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import com.betrybe.museumfinder.dto.CollectionTypeCount;
 import com.betrybe.museumfinder.service.CollectionTypeService;
@@ -40,5 +41,23 @@ public class CollectionTypeControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$.collectionTypes[0]").value("hist"))
         .andExpect(MockMvcResultMatchers.jsonPath("$.collectionTypes[1]").value("imag"))
         .andExpect(MockMvcResultMatchers.jsonPath("$.count").value(492));
+    Mockito.verify(collectionTypeService).countByCollectionTypes(eq("hist,imag"));
+  }
+
+  @Test
+  @DisplayName("Deve retornar status 404 quando o número de museus com uma dada coleção de tipos é zero")
+  public void testGetCollectionTypesCountNotFound() throws Exception {
+    String[] mockCollectionTypes = new String[]{"hist", "imag"};
+
+    CollectionTypeCount mockCollectionTypeCount = new CollectionTypeCount(mockCollectionTypes, 0);
+
+    Mockito.when(collectionTypeService.countByCollectionTypes(any())).thenReturn(mockCollectionTypeCount);
+
+    String url = "/collections/count/hist,imag";
+
+    mockMvc.perform(MockMvcRequestBuilders.get(url))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    Mockito.verify(collectionTypeService).countByCollectionTypes(eq("hist,imag"));
   }
 }
