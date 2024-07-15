@@ -42,4 +42,25 @@ public class CollectionTypeServiceTest {
         collectionTypeCount.collectionTypes());
     Mockito.verify(this.museumFakeDatabase).countByCollectionType(ArgumentMatchers.eq("hist"));
   }
+
+  @Test
+  @DisplayName("Testa countByCollectionTypes para totalCount == 0")
+      public void testCountByCollectionTypesWithTotalCountIsZero() throws Exception {
+        String[] mockCollectionTypes = new String[]{"hist"};
+        long mockCount = 0L;
+
+        CollectionTypeCount mockCollectionTypeCount = new CollectionTypeCount(mockCollectionTypes,
+        mockCount);
+
+        Mockito.when(this.museumFakeDatabase.countByCollectionType(ArgumentMatchers.any())).thenReturn(mockCount);
+
+        CollectionTypeCount collectionTypeCount =
+            this.collectionTypeService.countByCollectionTypes("hist");
+
+        Assertions.assertNotNull(collectionTypeCount);
+        Assertions.assertEquals(mockCollectionTypeCount.count(), collectionTypeCount.count());
+        Assertions.assertArrayEquals(mockCollectionTypeCount.collectionTypes(),
+            collectionTypeCount.collectionTypes());
+        Mockito.verify(this.museumFakeDatabase).countByCollectionType(ArgumentMatchers.eq("hist"));
+  }
 }
