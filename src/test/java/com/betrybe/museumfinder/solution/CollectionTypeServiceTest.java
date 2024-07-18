@@ -26,7 +26,7 @@ public class CollectionTypeServiceTest {
   public void testCountByCollectionTypesWithTotalCountBiggerThanZero() {
 
     String[] mockCollectionTypes = new String[]{"hist"};
-    long mockCount = 492L;
+    Long mockCount = 492L;
 
     CollectionTypeCount mockCollectionTypeCount = new CollectionTypeCount(mockCollectionTypes,
         mockCount);
@@ -47,7 +47,7 @@ public class CollectionTypeServiceTest {
   @DisplayName("Testa countByCollectionTypes para totalCount == 0")
       public void testCountByCollectionTypesWithTotalCountIsZero() throws Exception {
         String[] mockCollectionTypes = new String[]{"hist"};
-        long mockCount = 0L;
+        Long mockCount = 0L;
 
         CollectionTypeCount mockCollectionTypeCount = new CollectionTypeCount(mockCollectionTypes,
         mockCount);

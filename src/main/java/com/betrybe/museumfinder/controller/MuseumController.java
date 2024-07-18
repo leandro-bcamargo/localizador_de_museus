@@ -73,8 +73,14 @@ public class MuseumController {
     return ResponseEntity.ok(museumDto);
   }
 
-  @GetMapping("{id}")
-  private ResponseEntity<MuseumDto> getMuseum(@PathVariable Long id) {
+  /**
+   * Gets museum.
+   *
+   * @param id the id
+   * @return the museum
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<MuseumDto> getMuseum(@PathVariable Long id) {
     Museum museum = this.museumService.getMuseum(id);
     MuseumDto museumDto = ModelDtoConverter.modelToDto(museum);
 
