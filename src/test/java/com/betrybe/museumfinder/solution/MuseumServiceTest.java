@@ -6,6 +6,7 @@ import com.betrybe.museumfinder.exception.MuseumNotFoundException;
 import com.betrybe.museumfinder.model.Coordinate;
 import com.betrybe.museumfinder.model.Museum;
 import com.betrybe.museumfinder.service.MuseumService;
+import com.betrybe.museumfinder.util.CoordinateUtil;
 import java.util.HashMap;
 import java.util.Optional;
 import javax.swing.text.html.Option;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +31,7 @@ public class MuseumServiceTest {
 
   HashMap<String, String> museumData;
   Museum mockMuseum;
+  Museum mockInvalidCoordMuseum;
   Coordinate mockValidCoordinate;
   Coordinate mockInvalidCoordinate;
   Double mockMaxDistance;
@@ -58,9 +61,14 @@ public class MuseumServiceTest {
         1.0
     ));
 
+    mockInvalidCoordinate = new Coordinate(999, 999);
+
+    mockInvalidCoordMuseum = new Museum();
+
+    mockInvalidCoordMuseum.setCoordinate(this.mockInvalidCoordinate);
+
     mockValidCoordinate = new Coordinate(1, 1);
 
-    mockInvalidCoordinate = new Coordinate(999, 999);
 
     mockMaxDistance = 100.0;
   }
@@ -100,5 +108,33 @@ public class MuseumServiceTest {
 
     Assertions.assertThrows(MuseumNotFoundException.class,
         () -> this.museumService.getClosestMuseum(mockValidCoordinate, mockMaxDistance));
+  }
+
+  @Test
+  @DisplayName("Testa createMuseum no caso de sucesso")
+  public void testCreateMuseumSuccessful() {
+    Mockito.when(this.museumFakeDatabase.saveMuseum(this.mockMuseum))
+        .thenReturn(this.mockMuseum);
+
+    Museum museum = this.museumService.createMuseum(mockMuseum);
+
+    Assertions.assertEquals(this.mockMuseum.getId(), museum.getId());
+    Assertions.assertEquals(this.mockMuseum.getLegacyId(), museum.getLegacyId());
+    Assertions.assertEquals(this.mockMuseum.getCollectionType(), museum.getCollectionType());
+    Assertions.assertEquals(this.mockMuseum.getDescription(), museum.getDescription());
+    Assertions.assertEquals(this.mockMuseum.getCoordinate(), museum.getCoordinate());
+    Assertions.assertEquals(this.mockMuseum.getSubject(), museum.getSubject());
+    Assertions.assertEquals(this.mockMuseum.getUrl(), museum.getUrl());
+  }
+
+  @Test
+  @DisplayName("Testa createMuseum no caso de coordenada inválida")
+  public void testCreateMuseumInvalidCoordinate() {
+
+    Mockito.when(this.museumFakeDatabase.saveMuseum(this.mockInvalidCoordMuseum))
+        .thenThrow(InvalidCoordinateException.class);
+
+    Assertions.assertThrows(InvalidCoordinateException.class,
+        () -> this.museumService.createMuseum(this.mockInvalidCoordMuseum));
   }
 }
