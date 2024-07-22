@@ -36,6 +36,8 @@ public class MuseumServiceTest {
   Coordinate mockInvalidCoordinate;
   Double mockMaxDistance;
 
+  Long mockInvalidId;
+
   @BeforeEach
   public void setUp() {
     this.museumData = new HashMap<>();
@@ -71,6 +73,8 @@ public class MuseumServiceTest {
 
 
     mockMaxDistance = 100.0;
+
+    mockInvalidId = 999L;
   }
 
   @Test
@@ -136,5 +140,33 @@ public class MuseumServiceTest {
 
     Assertions.assertThrows(InvalidCoordinateException.class,
         () -> this.museumService.createMuseum(this.mockInvalidCoordMuseum));
+  }
+
+  @Test
+  @DisplayName("Testa getMuseum no caso de sucesso")
+  public void testGetMuseumSuccess() {
+    Mockito.when(this.museumFakeDatabase.getMuseum(this.mockMuseum.getId()))
+        .thenReturn(Optional.of(this.mockMuseum));
+
+    Museum museum = this.museumService.getMuseum(this.mockMuseum.getId());
+
+    Assertions.assertEquals(mockMuseum.getId(), museum.getId());
+    Assertions.assertEquals(mockMuseum.getAddress(), museum.getAddress());
+    Assertions.assertEquals(mockMuseum.getCollectionType(), museum.getCollectionType());
+    Assertions.assertEquals(mockMuseum.getDescription(), museum.getDescription());
+    Assertions.assertEquals(mockMuseum.getSubject(), museum.getSubject());
+    Assertions.assertEquals(mockMuseum.getLegacyId(), museum.getLegacyId());
+    Assertions.assertEquals(mockMuseum.getCoordinate(), museum.getCoordinate());
+  }
+
+  @Test
+  @DisplayName("Testa getMuseum no caso de museu não encontrado")
+  public void testGetMuseumNotFound() {
+    Mockito.when(this.museumFakeDatabase.getMuseum(this.mockInvalidId))
+        .thenThrow(MuseumNotFoundException.class);
+
+    Assertions.assertThrows(MuseumNotFoundException.class,
+        () -> this.museumService.getMuseum(this.mockInvalidId)
+    );
   }
 }
